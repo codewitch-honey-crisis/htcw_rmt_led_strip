@@ -16,7 +16,7 @@ You may then declare it, passing the relevant information like the GPIO# to the 
 
 Next call initialize().
 
-From there you can update or retrive the colors using color() accessor.
+From there you can update or retrieve the colors using color() accessor.
 
 Changes will take place once update() is called.
 
