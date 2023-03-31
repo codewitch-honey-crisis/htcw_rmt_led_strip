@@ -1,6 +1,6 @@
 {
     "name": "htcw_rmt_led_strip",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "description": "Provides hardware accelerated support for led strips/\"neopixels\" on the ESP32",
     "keywords": ["neopixel","led","strip","rmt","ESP32"],
     "authors": {
@@ -13,6 +13,6 @@
     "repository":
     {
         "type": "git",
-        "url": "https://github.com/codewitch-honey-crisis/htcw_m5core2_power.git"
+        "url": "https://github.com/codewitch-honey-crisis/htcw_rmt_led_strip.git"
     }
 }
