@@ -10,7 +10,12 @@ Be careful to choose a different interrupt and channel for each successive strip
 
 Using it is simple.
 
-include `<ws2812.hpp>`, `<sk6812.hpp>`, and/or `<apa106.hpp>` depending on the type of LED strip you are using.
+include `<rmt_led_strip.hpp>`
+
+next `using namespace arduino` (for arduino)
+next `using namespace esp_idf` (for esp-idf)
+
+Depending on the type of LED strip you are using, the class name is `ws2812`, `sk6812` or `apa106`
 
 You may then declare it, passing the relevant information like the GPIO# to the constructor.
 
