@@ -6,8 +6,11 @@
 #include <Arduino.h>
 namespace arduino {
 #else
+#include <stddef.h>
+#include <inttypes.h>
 namespace esp_idf {
 #endif
+#include <esp_idf_version.h>
 class led_strip {
     virtual bool initialized() const = 0;
     virtual bool initialize() = 0;
@@ -23,8 +26,13 @@ class ws2812 final : public led_strip {
     size_t m_length;
     uint8_t m_rmt_channel;
     uint8_t m_rmt_interrupt;
-    uint32_t* m_strip;
+    void* m_strip;
+#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
     void* m_rmt_items;
+#else
+    void* m_encoder;
+    void* m_channel;
+#endif
     ws2812(const ws2812& rhs)=delete;
     ws2812& operator=(const ws2812& rhs)=delete;
     void do_move(ws2812& rhs);
@@ -48,8 +56,13 @@ class sk6812 final : public led_strip {
     size_t m_length;
     uint8_t m_rmt_channel;
     uint8_t m_rmt_interrupt;
-    uint32_t* m_strip;
+    void* m_strip;
+#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
     void* m_rmt_items;
+#else
+    void* m_encoder;
+    void* m_channel;
+#endif
     sk6812(const sk6812& rhs)=delete;
     sk6812& operator=(const sk6812& rhs)=delete;
     void do_move(sk6812& rhs);
@@ -73,8 +86,13 @@ class apa106 final : public led_strip {
     size_t m_length;
     uint8_t m_rmt_channel;
     uint8_t m_rmt_interrupt;
-    uint32_t* m_strip;
+    void* m_strip;
+#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
     void* m_rmt_items;
+#else
+    void* m_encoder;
+    void* m_channel;
+#endif
     apa106(const apa106& rhs)=delete;
     apa106& operator=(const apa106& rhs)=delete;
     void do_move(apa106& rhs);
