@@ -12,6 +12,7 @@ namespace esp_idf {
 #endif
 #include <esp_idf_version.h>
 class led_strip {
+public:
     virtual bool initialized() const = 0;
     virtual bool initialize() = 0;
     virtual void deinitialize() = 0;
@@ -19,6 +20,7 @@ class led_strip {
     virtual uint32_t color(size_t index) const = 0;
     virtual void color(size_t index, uint32_t color) = 0;
     virtual void color(size_t index, uint8_t red, uint8_t green, uint8_t blue) = 0;
+    virtual void color(size_t index, uint8_t red, uint8_t green, uint8_t blue, uint8_t white) = 0;
     virtual void update() = 0;
 };
 class ws2812 final : public led_strip {
@@ -48,6 +50,7 @@ public:
     virtual uint32_t color(size_t index) const override;
     virtual void color(size_t index, uint32_t color) override;
     virtual void color(size_t index, uint8_t red, uint8_t green, uint8_t blue) override;
+    virtual void color(size_t index, uint8_t red, uint8_t green, uint8_t blue, uint8_t white) override;
     virtual void update() override;
 };
 
@@ -78,6 +81,7 @@ public:
     virtual uint32_t color(size_t index) const override;
     virtual void color(size_t index, uint32_t color) override;
     virtual void color(size_t index, uint8_t red, uint8_t green, uint8_t blue) override;
+    virtual void color(size_t index, uint8_t red, uint8_t green, uint8_t blue, uint8_t white) override;
     virtual void update() override;
 };
 
@@ -108,6 +112,7 @@ public:
     virtual uint32_t color(size_t index) const override;
     virtual void color(size_t index, uint32_t color) override;
     virtual void color(size_t index, uint8_t red, uint8_t green, uint8_t blue) override;
+    virtual void color(size_t index, uint8_t red, uint8_t green, uint8_t blue, uint8_t white) override;
     virtual void update() override;
 
 };
