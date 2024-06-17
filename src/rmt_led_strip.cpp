@@ -540,6 +540,11 @@ void ws2812::color(size_t index, uint8_t r, uint8_t g, uint8_t b) {
     uint32_t value = (r << 16) | (g << 8) | b;
     color(index, value);
 }
+void ws2812::color(size_t index, uint8_t r, uint8_t g, uint8_t b,uint8_t w) {
+    uint32_t value = (w << 24) | (r << 16) | (g << 8) | b;
+    color(index, value);
+}
+
 
 sk6812::sk6812(uint8_t pin, size_t length, uint8_t rmt_channel, uint8_t rmt_interrupt) : m_pin(pin),
                                                                                          m_length(length),
@@ -675,6 +680,10 @@ void sk6812::color(size_t index, uint8_t r, uint8_t g, uint8_t b) {
     uint32_t value = (r << 16) | (g << 8) | b;
     color(index, value);
 }
+void sk6812::color(size_t index, uint8_t r, uint8_t g, uint8_t b,uint8_t w) {
+    uint32_t value = (w << 24) | (r << 16) | (g << 8) | b;
+    color(index, value);
+}
 
 apa106::apa106(uint8_t pin, size_t length, uint8_t rmt_channel, uint8_t rmt_interrupt) : m_pin(pin),
                                                                                          m_length(length),
@@ -808,5 +817,9 @@ void apa106::color(size_t index, uint32_t value) {
 }
 void apa106::color(size_t index, uint8_t r, uint8_t g, uint8_t b) {
     uint32_t value = (r << 16) | (g << 8) | b;
+    color(index, value);
+}
+void apa106::color(size_t index, uint8_t r, uint8_t g, uint8_t b,uint8_t w) {
+    uint32_t value = (w << 24) | (r << 16) | (g << 8) | b;
     color(index, value);
 }
