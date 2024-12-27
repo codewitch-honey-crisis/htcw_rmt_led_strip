@@ -9,6 +9,7 @@ void setup() {
   leds.initialize();
   // set led index 0 to purple
   leds.color(0,255,0,255);
+  leds.update();
 }
 
 void loop() {
