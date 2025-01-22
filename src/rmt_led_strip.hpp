@@ -1,0 +1,148 @@
+#pragma once
+#ifndef ESP_PLATFORM
+#error "This library requires an ESP32"
+#endif
+#if __has_include(<Arduino.h>)
+#include <Arduino.h>
+#else
+#include <stddef.h>
+#include <inttypes.h>
+#endif
+#include <esp_idf_version.h>
+namespace htcw {
+
+class led_strip {
+public:
+    virtual bool initialized() const = 0;
+    virtual bool initialize() = 0;
+    virtual void deinitialize() = 0;
+    virtual size_t length() const = 0;
+    virtual uint32_t color(size_t index) const = 0;
+    virtual void color(size_t index, uint32_t color) = 0;
+    virtual void color(size_t index, uint8_t red, uint8_t green, uint8_t blue) = 0;
+    virtual void color(size_t index, uint8_t red, uint8_t green, uint8_t blue, uint8_t white) = 0;
+    virtual void update() = 0;
+};
+class led_panel {
+    led_strip* m_strip;
+    uint8_t m_rotation;
+    uint16_t m_native_width;
+    void translate_rotation(uint16_t* x,uint16_t* y) const;
+    size_t to_index_raw(uint16_t x,uint16_t y) const;
+    size_t to_index(uint16_t x,uint16_t y) const;
+public:
+    led_panel(led_strip& strip, uint16_t native_width);
+    led_panel(const led_panel& rhs);
+    led_panel& operator=(const led_panel& rhs);
+    bool initialize();
+    bool initialized() const;
+    void deinitialize();
+    led_strip& strip() const;
+    void strip(led_strip& strip);
+    uint16_t native_width() const;
+    uint16_t native_height() const;
+    uint16_t width() const;
+    uint16_t height() const;
+    uint8_t rotation() const;
+    void rotation(uint8_t value);
+    uint32_t point(uint16_t x, uint16_t y) const;
+    void point(uint16_t x, uint16_t y, uint32_t color);
+    void point(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b);
+    void point(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b, uint8_t w);
+    void update();
+};
+class ws2812 final : public led_strip {
+    uint8_t m_pin;
+    size_t m_length;
+    uint8_t m_rmt_channel;
+    uint8_t m_rmt_interrupt;
+    void* m_strip;
+#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
+    void* m_rmt_items;
+#else
+    void* m_encoder;
+    void* m_channel;
+#endif
+    ws2812(const ws2812& rhs)=delete;
+    ws2812& operator=(const ws2812& rhs)=delete;
+    void do_move(ws2812& rhs);
+public:
+    ws2812(uint8_t pin,size_t length, uint8_t rmt_channel=0, uint8_t rmt_interrupt=23);
+    ws2812(ws2812&& rhs);
+    virtual ~ws2812();
+    ws2812& operator=(ws2812&& rhs);
+    virtual bool initialized() const override;
+    virtual bool initialize() override;
+    virtual void deinitialize() override;
+    virtual size_t length() const override;
+    virtual uint32_t color(size_t index) const override;
+    virtual void color(size_t index, uint32_t color) override;
+    virtual void color(size_t index, uint8_t red, uint8_t green, uint8_t blue) override;
+    virtual void color(size_t index, uint8_t red, uint8_t green, uint8_t blue, uint8_t white) override;
+    virtual void update() override;
+};
+
+class sk6812 final : public led_strip {
+    uint8_t m_pin;
+    size_t m_length;
+    uint8_t m_rmt_channel;
+    uint8_t m_rmt_interrupt;
+    void* m_strip;
+#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
+    void* m_rmt_items;
+#else
+    void* m_encoder;
+    void* m_channel;
+#endif
+    sk6812(const sk6812& rhs)=delete;
+    sk6812& operator=(const sk6812& rhs)=delete;
+    void do_move(sk6812& rhs);
+public:
+    sk6812(uint8_t pin,size_t length, uint8_t rmt_channel=0, uint8_t rmt_interrupt=23);
+    sk6812(sk6812&& rhs);
+    virtual ~sk6812();
+    sk6812& operator=(sk6812&& rhs);
+    virtual bool initialized() const override;
+    virtual bool initialize() override;
+    virtual void deinitialize() override;
+    virtual size_t length() const override;
+    virtual uint32_t color(size_t index) const override;
+    virtual void color(size_t index, uint32_t color) override;
+    virtual void color(size_t index, uint8_t red, uint8_t green, uint8_t blue) override;
+    virtual void color(size_t index, uint8_t red, uint8_t green, uint8_t blue, uint8_t white) override;
+    virtual void update() override;
+};
+
+class apa106 final : public led_strip {
+    uint8_t m_pin;
+    size_t m_length;
+    uint8_t m_rmt_channel;
+    uint8_t m_rmt_interrupt;
+    void* m_strip;
+#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
+    void* m_rmt_items;
+#else
+    void* m_encoder;
+    void* m_channel;
+#endif
+    apa106(const apa106& rhs)=delete;
+    apa106& operator=(const apa106& rhs)=delete;
+    void do_move(apa106& rhs);
+public:
+    apa106(uint8_t pin,size_t length, uint8_t rmt_channel=0, uint8_t rmt_interrupt=23);
+    apa106(apa106&& rhs);
+    virtual ~apa106();
+    apa106& operator=(apa106&& rhs);
+    virtual bool initialized() const override;
+    virtual bool initialize() override;
+    virtual void deinitialize() override;
+    virtual size_t length() const override;
+    virtual uint32_t color(size_t index) const override;
+    virtual void color(size_t index, uint32_t color) override;
+    virtual void color(size_t index, uint8_t red, uint8_t green, uint8_t blue) override;
+    virtual void color(size_t index, uint8_t red, uint8_t green, uint8_t blue, uint8_t white) override;
+    virtual void update() override;
+
+};
+
+}

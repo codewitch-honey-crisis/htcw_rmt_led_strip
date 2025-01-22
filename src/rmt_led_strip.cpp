@@ -2,11 +2,7 @@
 // https://github.com/Lucas-Bruder/ESP32_LED_STRIP/tree/master/components/led_strip
 #include <rmt_led_strip.hpp>
 
-#ifdef ARDUINO
-using namespace arduino;
-#else
-using namespace esp_idf;
-#endif
+using namespace htcw;
 #if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 0, 0)
 #include <driver/rmt_tx.h>
 #include <freertos/FreeRTOS.h>
@@ -822,4 +818,111 @@ void apa106::color(size_t index, uint8_t r, uint8_t g, uint8_t b) {
 void apa106::color(size_t index, uint8_t r, uint8_t g, uint8_t b,uint8_t w) {
     uint32_t value = (w << 24) | (r << 16) | (g << 8) | b;
     color(index, value);
+}
+
+led_panel::led_panel(led_strip& strip, uint16_t native_width) : m_strip(&strip), m_rotation(0),m_native_width(native_width) {
+
+}
+led_panel::led_panel(const led_panel& rhs) {
+    *this=rhs;
+}
+led_panel& led_panel::operator=(const led_panel& rhs) {
+    *this = rhs;
+    return *this;
+}
+bool led_panel::initialize() {
+    if(m_strip!=nullptr) {
+        return m_strip->initialize();
+    }
+    return false;
+}
+bool led_panel::initialized() const {
+    if(m_strip!=nullptr) {
+        return m_strip->initialized();
+    }
+    return false;
+}
+void led_panel::deinitialize() {
+    if(m_strip!=nullptr) {
+        m_strip->deinitialize();
+    }
+}
+uint16_t led_panel::native_width() const { return m_native_width; }
+uint16_t led_panel::native_height() const {
+    if(m_strip==nullptr) {
+        return 0;
+    }
+    return m_strip->length()/m_native_width;
+}
+uint16_t led_panel::width() const { return m_rotation&1?native_height():native_width();}
+uint16_t led_panel::height() const { return m_rotation&1?native_width():native_height();}
+uint8_t led_panel::rotation() const { return m_rotation; }
+void led_panel::rotation(uint8_t value) {
+    m_rotation = value&3;
+}
+void led_panel::translate_rotation(uint16_t* x, uint16_t* y) const {
+    uint16_t tmp;
+    switch (m_rotation) {
+        case 1:
+            tmp = *x;
+            *x = *y;
+            *y = native_height() - tmp - 1;
+            break;
+        case 2:
+            *x = native_width() - *x - 1;
+            *y = native_height() - *y - 1;
+            break;
+        case 3:
+            tmp = *x;
+            *x = native_width() - *y - 1;
+            *y = tmp;
+        default:
+            break;
+    }
+}
+size_t led_panel::to_index_raw(uint16_t x, uint16_t y) const {
+    if(0==(y&1)) {
+        x=native_width()-x-1;
+    }
+    return y*native_width()+x;
+}
+size_t led_panel::to_index(uint16_t x, uint16_t y) const {
+    translate_rotation(&x,&y);
+    return to_index_raw(x,y);
+}
+uint32_t led_panel::point(uint16_t x, uint16_t y) const {
+    if(m_strip==nullptr) {
+        return 0;
+    }
+    return m_strip->color(to_index(x,y));
+}
+void led_panel::point(uint16_t x, uint16_t y, uint32_t color) {
+    if(m_strip==nullptr) {
+        return;
+    }
+    m_strip->color(to_index(x,y),color);
+}
+void led_panel::point(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b) {
+    if(m_strip==nullptr) {
+        return;
+    }
+    m_strip->color(to_index(x,y),r,g,b);
+}
+void led_panel::point(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b, uint8_t w) {
+    if(m_strip==nullptr) {
+        return;
+    }
+    m_strip->color(to_index(x,y),r,g,b,w);
+}
+led_strip& led_panel::strip() const {
+    return *m_strip;
+}
+void led_panel::strip(led_strip& strip) {
+    m_strip = &strip;
+}
+void led_panel::update() {
+    if(m_strip==nullptr) {
+        return;
+    }
+    m_strip->update();
 }

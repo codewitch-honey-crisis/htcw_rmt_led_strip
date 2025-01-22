@@ -1,6 +1,6 @@
 {
     "name": "htcw_rmt_led_strip",
-    "version": "0.1.6",
+    "version": "0.2.0",
     "description": "Provides hardware accelerated support for led strips/\"neopixels\" on the ESP32",
     "keywords": ["neopixel","led","strip","rmt","ESP32"],
     "authors": {
