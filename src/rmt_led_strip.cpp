@@ -824,10 +824,15 @@ led_panel::led_panel(led_strip& strip, uint16_t native_width) : m_strip(&strip),
 
 }
 led_panel::led_panel(const led_panel& rhs) {
+    m_strip = rhs.m_strip;
+    m_rotation = rhs.m_rotation;
+    m_native_width = rhs.m_native_width;
     *this=rhs;
 }
 led_panel& led_panel::operator=(const led_panel& rhs) {
-    *this = rhs;
+    m_strip = rhs.m_strip;
+    m_rotation = rhs.m_rotation;
+    m_native_width = rhs.m_native_width;
     return *this;
 }
 bool led_panel::initialize() {
